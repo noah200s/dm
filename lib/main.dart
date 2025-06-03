@@ -28,7 +28,7 @@ class DoctorWebApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'معاذ - لوحة تحكم الأطباء',
+      title: 'موعدك - لوحة تحكم الأطباء',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: const AuthWrapper(),
