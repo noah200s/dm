@@ -95,11 +95,16 @@ class AppointmentService {
     return _firestore
         .collection(_appointmentsCollection)
         .where('doctorId', isEqualTo: doctorId)
-        .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => AppointmentModel.fromFirestore(doc))
-            .toList());
+        .map((snapshot) {
+          final appointments = snapshot.docs
+              .map((doc) => AppointmentModel.fromFirestore(doc))
+              .toList();
+
+          // ترتيب البيانات في الكود لتجنب الحاجة للفهرس
+          appointments.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+          return appointments;
+        });
   }
 
   /// الحصول على مواعيد المريض
@@ -107,11 +112,16 @@ class AppointmentService {
     return _firestore
         .collection(_appointmentsCollection)
         .where('patientId', isEqualTo: patientId)
-        .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => AppointmentModel.fromFirestore(doc))
-            .toList());
+        .map((snapshot) {
+          final appointments = snapshot.docs
+              .map((doc) => AppointmentModel.fromFirestore(doc))
+              .toList();
+
+          // ترتيب البيانات في الكود لتجنب الحاجة للفهرس
+          appointments.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+          return appointments;
+        });
   }
 
   /// تأكيد الموعد من قبل الطبيب
@@ -226,11 +236,16 @@ class AppointmentService {
         .collection(_appointmentsCollection)
         .where('doctorId', isEqualTo: doctorId)
         .where('status', isEqualTo: AppointmentStatus.pending.name)
-        .orderBy('createdAt', descending: false)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => AppointmentModel.fromFirestore(doc))
-            .toList());
+        .map((snapshot) {
+          final appointments = snapshot.docs
+              .map((doc) => AppointmentModel.fromFirestore(doc))
+              .toList();
+
+          // ترتيب البيانات في الكود بدلاً من Firestore لتجنب الحاجة للفهرس
+          appointments.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+          return appointments;
+        });
   }
 
   /// الحصول على المواعيد لتاريخ محدد
@@ -441,5 +456,74 @@ class AppointmentService {
     }
 
     throw Exception('فشل في إنشاء الموعد بعد $maxRetries محاولات');
+  }
+
+  /// الحصول على مواعيد الطبيب حسب الحالة (بدون فهرس مركب)
+  static Stream<List<AppointmentModel>> getDoctorAppointmentsByStatus(
+    String doctorId,
+    AppointmentStatus status,
+  ) {
+    return _firestore
+        .collection(_appointmentsCollection)
+        .where('doctorId', isEqualTo: doctorId)
+        .where('status', isEqualTo: status.name)
+        .snapshots()
+        .map((snapshot) {
+          final appointments = snapshot.docs
+              .map((doc) => AppointmentModel.fromFirestore(doc))
+              .toList();
+
+          // ترتيب البيانات في الكود
+          appointments.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+          return appointments;
+        });
+  }
+
+  /// الحصول على مواعيد اليوم للطبيب
+  static Stream<List<AppointmentModel>> getTodayAppointments(String doctorId) {
+    final today = DateTime.now();
+    final todayString = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+
+    return _firestore
+        .collection(_appointmentsCollection)
+        .where('doctorId', isEqualTo: doctorId)
+        .where('appointmentDate', isEqualTo: todayString)
+        .snapshots()
+        .map((snapshot) {
+          final appointments = snapshot.docs
+              .map((doc) => AppointmentModel.fromFirestore(doc))
+              .toList();
+
+          // ترتيب حسب الوقت
+          appointments.sort((a, b) => a.appointmentTime.compareTo(b.appointmentTime));
+          return appointments;
+        });
+  }
+
+  /// الحصول على المواعيد القادمة للطبيب
+  static Stream<List<AppointmentModel>> getUpcomingAppointments(String doctorId) {
+    final today = DateTime.now();
+    final todayString = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+
+    return _firestore
+        .collection(_appointmentsCollection)
+        .where('doctorId', isEqualTo: doctorId)
+        .where('status', whereIn: [AppointmentStatus.pending.name, AppointmentStatus.confirmed.name])
+        .snapshots()
+        .map((snapshot) {
+          final appointments = snapshot.docs
+              .map((doc) => AppointmentModel.fromFirestore(doc))
+              .where((apt) => apt.appointmentDate.compareTo(todayString) >= 0)
+              .toList();
+
+          // ترتيب حسب التاريخ والوقت
+          appointments.sort((a, b) {
+            final dateComparison = a.appointmentDate.compareTo(b.appointmentDate);
+            if (dateComparison != 0) return dateComparison;
+            return a.appointmentTime.compareTo(b.appointmentTime);
+          });
+
+          return appointments;
+        });
   }
 }
