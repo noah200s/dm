@@ -1,11 +1,11 @@
 {
-    "name": "doctor_web_app_new",
-    "short_name": "doctor_web_app_new",
+    "name": "موعدك - لوحة التحكم",
+    "short_name": "موعدك",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#6c547b",
+    "theme_color": "#6c547b",
+    "description": "لوحة تحكم الأطباء - نظام إدارة العيادات والمواعيد الطبية",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
