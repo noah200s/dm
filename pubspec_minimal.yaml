@@ -1,0 +1,39 @@
+# MINIMAL Firebase setup - No dependency_overrides
+# Use this if the main pubspec.yaml still fails
+
+name: doctor_web_app_new
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Firebase - MINIMAL SAFE versions (no overrides)
+  firebase_core: 2.8.0          # Very stable
+  firebase_auth: 4.0.0          # Proven to work with Dart 3.4.1
+  cloud_firestore: 4.2.0        # Compatible
+
+  # UI
+  cupertino_icons: ^1.0.6
+  google_fonts: ^6.1.0
+  table_calendar: ^3.0.9
+
+  # Maps and Location
+  google_maps_flutter: ^2.5.0
+  geolocator: ^10.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+# NO dependency_overrides - let Flutter choose compatible versions
+
+flutter:
+  uses-material-design: true
