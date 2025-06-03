@@ -45,7 +45,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
 
   // قائمة التخصصات
   final List<String> _specialties = [
-    ' طب عام',
+    'طب عام',
     'قلب وأوعية دموية',
     'أسنان',
     'جلدية',
