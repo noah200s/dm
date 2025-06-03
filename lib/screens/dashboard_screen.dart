@@ -149,7 +149,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               // Dashboard Cards
               PageSection(
                 title: 'لوحة التحكم',
-                subtitle: 'إدارة عيادتك ومواعيدك',
+                subtitle: 'إدارة مواعيدك',
                 child: ResponsiveGrid(
                   children: [
                     StatusCard(doctorData: _doctorData!),
