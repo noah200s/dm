@@ -414,7 +414,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
 
   Widget _buildConfirmedAppointments() {
     return StreamBuilder<List<AppointmentModel>>(
-      stream: AppointmentService.getDoctorAppointments(widget.doctorData['id']),
+      stream: AppointmentService.getDoctorAppointmentsByStatus(
+        widget.doctorData['id'],
+        AppointmentStatus.confirmed
+      ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return _buildLoadingWidget();
@@ -424,10 +427,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
           return _buildErrorWidget(snapshot.error.toString());
         }
 
-        final allAppointments = snapshot.data ?? [];
-        final confirmedAppointments = allAppointments
-            .where((apt) => apt.status == AppointmentStatus.confirmed)
-            .toList();
+        final confirmedAppointments = snapshot.data ?? [];
 
         if (confirmedAppointments.isEmpty) {
           return _buildEmptyWidget('لا توجد مواعيد مؤكدة');
@@ -440,7 +440,10 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
 
   Widget _buildCompletedAppointments() {
     return StreamBuilder<List<AppointmentModel>>(
-      stream: AppointmentService.getDoctorAppointments(widget.doctorData['id']),
+      stream: AppointmentService.getDoctorAppointmentsByStatus(
+        widget.doctorData['id'],
+        AppointmentStatus.completed
+      ),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return _buildLoadingWidget();
@@ -450,10 +453,7 @@ class _AppointmentsScreenState extends State<AppointmentsScreen>
           return _buildErrorWidget(snapshot.error.toString());
         }
 
-        final allAppointments = snapshot.data ?? [];
-        final completedAppointments = allAppointments
-            .where((apt) => apt.status == AppointmentStatus.completed)
-            .toList();
+        final completedAppointments = snapshot.data ?? [];
 
         if (completedAppointments.isEmpty) {
           return _buildEmptyWidget('لا توجد مواعيد مكتملة');

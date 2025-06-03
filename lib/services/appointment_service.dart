@@ -282,24 +282,29 @@ class AppointmentService {
     try {
       print('🔍 التحقق من توفر الوقت: طبيب=$doctorId، تاريخ=$date، وقت=$time');
 
+      // استعلام بسيط بدون whereIn لتجنب الحاجة للفهرس المركب
       final snapshot = await _firestore
           .collection(_appointmentsCollection)
           .where('doctorId', isEqualTo: doctorId)
           .where('appointmentDate', isEqualTo: date)
           .where('appointmentTime', isEqualTo: time)
-          .where('status', whereIn: [
-            AppointmentStatus.pending.name,
-            AppointmentStatus.confirmed.name,
-          ])
           .get();
 
-      final isAvailable = snapshot.docs.isEmpty;
-      print('✅ نتيجة التحقق: ${isAvailable ? "متاح" : "محجوز"} (عدد المواعيد الموجودة: ${snapshot.docs.length})');
+      // فلترة النتائج في الكود للحصول على المواعيد النشطة فقط
+      final activeAppointments = snapshot.docs.where((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        final status = data['status'] as String?;
+        return status == AppointmentStatus.pending.name ||
+               status == AppointmentStatus.confirmed.name;
+      }).toList();
+
+      final isAvailable = activeAppointments.isEmpty;
+      print('✅ نتيجة التحقق: ${isAvailable ? "متاح" : "محجوز"} (عدد المواعيد النشطة: ${activeAppointments.length})');
 
       if (!isAvailable) {
         print('📋 المواعيد الموجودة:');
-        for (final doc in snapshot.docs) {
-          final data = doc.data();
+        for (final doc in activeAppointments) {
+          final data = doc.data() as Map<String, dynamic>;
           print('   - مريض: ${data['patientName']}, حالة: ${data['status']}');
         }
       }
@@ -512,12 +517,14 @@ class AppointmentService {
     return _firestore
         .collection(_appointmentsCollection)
         .where('doctorId', isEqualTo: doctorId)
-        .where('status', whereIn: [AppointmentStatus.pending.name, AppointmentStatus.confirmed.name])
         .snapshots()
         .map((snapshot) {
           final appointments = snapshot.docs
               .map((doc) => AppointmentModel.fromFirestore(doc))
-              .where((apt) => apt.appointmentDate.compareTo(todayString) >= 0)
+              .where((apt) =>
+                (apt.status == AppointmentStatus.pending || apt.status == AppointmentStatus.confirmed) &&
+                apt.appointmentDate.compareTo(todayString) >= 0
+              )
               .toList();
 
           // ترتيب حسب التاريخ والوقت

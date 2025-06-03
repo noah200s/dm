@@ -37,17 +37,24 @@
 
 ### **2. الدوال المحدثة:**
 
-#### **✅ getDoctorAppointments:**
-- إزالة `orderBy('createdAt')`
-- ترتيب البيانات في الكود
+#### **✅ doctor_web_app_new:**
+- `getDoctorAppointments()` - إزالة `orderBy('createdAt')`
+- `getPatientAppointments()` - إزالة `orderBy('createdAt')`
+- `getPendingAppointments()` - إزالة `orderBy('createdAt')`
+- `getAppointmentsByDate()` - إزالة `orderBy('appointmentTime')`
+- `isTimeSlotAvailable()` - إزالة `whereIn` واستخدام فلترة في الكود
+- `getUpcomingAppointments()` - إزالة `whereIn` واستخدام فلترة في الكود
+- تحسين `appointments_screen.dart` لاستخدام `getDoctorAppointmentsByStatus()`
 
-#### **✅ getPatientAppointments:**
-- إزالة `orderBy('createdAt')`
-- ترتيب البيانات في الكود
+#### **✅ muadk_app:**
+- `getPatientAppointmentsStream()` - إزالة `orderBy('createdAt')`
+- إضافة ترتيب في `_getFilteredFirebaseAppointments()`
 
-#### **✅ getPendingAppointments:**
-- إزالة `orderBy('createdAt')`
-- ترتيب البيانات في الكود
+#### **✅ doctor_app:**
+- `getAppointmentsStream()` - إزالة `orderBy('createdAt')`
+- `getRatingsStream()` - إزالة `orderBy('createdAt')`
+- `getDoctorAppointmentsStream()` - إزالة `orderBy('createdAt')`
+- `getDoctorNotificationsStream()` - إزالة `orderBy('createdAt')`
 
 #### **✅ دوال جديدة محسنة:**
 - `getDoctorAppointmentsByStatus()` - حسب الحالة
