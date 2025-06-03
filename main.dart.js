@@ -50243,7 +50243,7 @@ $1(a){if(a.p(0,B.F))return B.D
 return B.I},
 $S:6}
 A.MZ.prototype={
-F(a){return new A.BZ(B.DS,"\u0645\u0648\u0639\u062f\u0643 - \u0644\u0648\u062d\u0629 \u0627\u0644\u062a\u062d\u0643\u0645",A.aVe(),!1,null)}}
+F(a){return new A.BZ(B.DS," \u0645\u0648\u0639\u062f\u0643 - \u0644\u0648\u062d\u0629 \u0627\u0644\u062a\u062d\u0643\u0645",A.aVe(),!1,null)}}
 A.Lm.prototype={
 F(a){var s=$.bE,r=(s==null?$.bE=$.dB():s).dI("[DEFAULT]")
 A.c3(r,$.du(),!0)
