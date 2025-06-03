@@ -258,12 +258,16 @@ class AppointmentService {
           .collection(_appointmentsCollection)
           .where('doctorId', isEqualTo: doctorId)
           .where('appointmentDate', isEqualTo: date)
-          .orderBy('appointmentTime')
           .get();
 
-      return snapshot.docs
+      final appointments = snapshot.docs
           .map((doc) => AppointmentModel.fromFirestore(doc))
           .toList();
+
+      // ترتيب البيانات في الكود لتجنب الحاجة للفهرس
+      appointments.sort((a, b) => a.appointmentTime.compareTo(b.appointmentTime));
+
+      return appointments;
     } catch (e) {
       throw Exception('خطأ في جلب مواعيد التاريخ المحدد: $e');
     }
