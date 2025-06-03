@@ -145,7 +145,7 @@ class _CalendarScheduleScreenState extends State<CalendarScheduleScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('تم حفظ الجدول ومزامنته بنجاح'),
+            content: Text('تم حفظ الجدول  ومزامنته بنجاح'),
             backgroundColor: Colors.green,
           ),
         );
