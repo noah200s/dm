@@ -104,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
           print('❌ Email is null or empty for user: $username');
           throw FirebaseAuthException(
             code: 'invalid-email',
-            message: 'البريد الإلكتروني غير صحيح للمستخدم',
+            message: ' البريد الإلكتروني غير صحيح للمستخدم',
           );
         }
       }
